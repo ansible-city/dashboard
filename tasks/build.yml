@@ -1,0 +1,32 @@
+---
+
+- name: Install dashboard required packages
+  become: yes
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - git
+
+- name: Clone dashboard repository
+  become: yes
+  become_user: "{{ dashboard.name }}"
+  git:
+    repo: https://github.com/hoborglabs/dashboard.git
+    version: "{{ dashboard.version }}"
+    dest: "/home/{{ dashboard.name }}/core"
+    update: no
+    accept_hostkey: true
+
+- name: Install dependencies
+  become: yes
+  become_user: "{{ dashboard.name }}"
+  command: make deps
+  args:
+    chdir: "/home/{{ dashboard.name }}/core"
+  register: results_make
+  changed_when: "'Nothing to install or update' not in results_make.stderr"
+
+- debug: var=results_make
+
+- name: Build Dashboard Web
+  include: build/web.yml

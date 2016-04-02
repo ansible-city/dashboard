@@ -1,0 +1,32 @@
+---
+
+galaxy_info:
+  author: Wojtek Oledzki
+  company: Voytek Solutions Ltd
+  description: Installs and configures Hoborglabs Dashboard
+  github_branch: master
+  license: MIT
+  min_ansible_version: 1.9
+  platforms:
+    - name: Ubuntu
+      versions:
+        - precise
+        - trusty
+  galaxy_tags:
+    - monitoring
+
+dependencies:
+  - role: ansible-city.users_and_groups
+    users_and_roles:
+      users:
+        - name: "{{ dashboard.name }}"
+
+  - role: ansible-city.nginx
+
+  - role: ansible-city.php
+    php:
+      fpm:
+        description: Dashboard
+        chroot: "/home/{{ dashboard.name }}/web/htdocs"
+        group: "{{ dashboard.name }}"
+        user: "{{ dashboard.name }}"

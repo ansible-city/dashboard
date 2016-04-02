@@ -1,0 +1,9 @@
+---
+
+dashboard:
+  name: dashboard
+  port: 80
+  server_name: dashboard.app.internal
+  version: master
+  logs:
+    nginx: /home/dashboard/log

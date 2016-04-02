@@ -1,0 +1,28 @@
+##
+# {{ ansible_managed }}
+#
+
+server {
+	listen {{ dashboard.port }};
+	server_name {{ dashboard.server_name }} localhost 10.* 192.168.*;
+	root /home/{{ dashboard.name }}/web/htdocs;
+
+	access_log {{ dashboard.logs.nginx }}/access.log main;
+	error_log {{ dashboard.logs.nginx }}/error.log;
+
+	include includes/nginx_status;
+	include includes/{{ dashboard.name }}_fpm_status;
+
+	location / {
+		root /home/{{ dashboard.name }}/web/htdocs/;
+		try_files $uri /index.php$is_args$args;
+	}
+
+	location ~ \.php$ {
+		include includes/{{ dashboard.name }}_fastcgi_params;
+
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+		fastcgi_pass unix:/home/{{ dashboard.name }}/run/php5-fpm.sock;
+		fastcgi_index index.php;
+	}
+}
