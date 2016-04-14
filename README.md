@@ -61,3 +61,26 @@ To simply add swap to your server:
   roles:
     - role: ansible-city.dashboard
 ```
+
+Ensure only `static` folder symlink - You've decided to keep your version of
+`index.php`.
+
+```YAML
+- name: Add swap memory to the server
+  hosts: sandbox
+
+  pre_tasks:
+    - name: Update apt
+      become: yes
+      apt:
+        cache_valid_time: 1800
+        update_cache: yes
+      tags:
+        - build
+
+  roles:
+    - role: ansible-city.dashboard
+      dashboard:
+        resources:
+          - htdocs/static
+```

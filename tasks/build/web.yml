@@ -7,18 +7,23 @@
   args:
     creates: "/home/{{ dashboard.name }}/web"
 
-- name: Ensure symplinks
+- name: Ensure core symlinks
   become: yes
   become_user: "{{ dashboard.name }}"
   file:
     state: link
     force: yes
-    src: "{{ item.to }}"
-    dest: "{{ item.from }}"
+    src: "/home/{{ dashboard.name }}/core/{{ item }}"
+    dest: "/home/{{ dashboard.name }}/web/{{ item }}"
   with_items:
-    - from: "/home/{{ dashboard.name }}/web/vendor"
-      to: "/home/{{ dashboard.name }}/core/vendor"
-    - from: "/home/{{ dashboard.name }}/web/htdocs/index.php"
-      to: "/home/{{ dashboard.name }}/core/src/Hoborg/Dashboard/Resources/htdocs/index.php"
-    - from: "/home/{{ dashboard.name }}/web/htdocs/static"
-      to: "/home/{{ dashboard.name }}/core/src/Hoborg/Dashboard/Resources/htdocs/static"
+    - vendor
+
+- name: Ensure resources symlinks
+  become: yes
+  become_user: "{{ dashboard.name }}"
+  file:
+    state: link
+    force: yes
+    src: "/home/{{ dashboard.name }}/core/src/Hoborg/Dashboard/Resources/{{ item }}"
+    dest: "/home/{{ dashboard.name }}/web/{{ item }}"
+  with_items: "{{ dashboard.resources }}"
