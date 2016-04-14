@@ -33,17 +33,16 @@ vagrant_up:
 	cd tests/vagrant && vagrant up --no-provision
 	cd tests/vagrant && vagrant provision
 
-## Ssh to Vagrant test box
-vagrant_ssh:
-	cd tests/vagrant && vagrant up --no-provision
-	cd tests/vagrant && vagrant ssh
-
 ## Execute simple Vagrant command
 # Example: make vagrant_ssh
 #          make vagrant_halt
 vagrant_%:
-	cd tests/vagrant && vagrant up --no-provision
 	cd tests/vagrant && vagrant $(subst vagrant_,,$@)
+
+## Lint role
+lint:
+	find defaults/ meta/ tasks/ templates/ -name "*.yml" | xargs -I{} ansible-lint {}
+
 ## Clean up
 clean:
 	rm -rf tests/ansible-city.*

@@ -5,5 +5,11 @@ dashboard:
   port: 80
   server_name: dashboard.app.internal
   version: master
+
+  resources:
+    - htdocs/index.php
+    - htdocs/index.phar.php
+    - htdocs/static
+
   logs:
     nginx: /home/dashboard/log
